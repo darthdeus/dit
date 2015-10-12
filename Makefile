@@ -22,3 +22,6 @@ valgrind:
 
 run: dit
 	./bin/dit
+
+clean:
+	rm -rf -- obj/* bin/* tmp/*
