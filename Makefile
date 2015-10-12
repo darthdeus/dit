@@ -14,8 +14,8 @@ all: run
 obj/%.o: src/%.c
 	$(CC) $(CFLAGS) $(CPFLAGS) -c $< -o $@
 
-dit:
-	$(CC) $(LIB) $(OBJS) -o bin/dit
+dit: $(OBJ)
+	$(CC) $(LIB) $(OBJ) -o bin/dit
 
 valgrind:
 	valgrind --log-file=tmp/valgrind.txt ./bin/dit
