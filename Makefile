@@ -17,5 +17,8 @@ obj/%.o: src/%.c
 dit:
 	$(CC) $(LIB) $(OBJS) -o bin/dit
 
+valgrind:
+	valgrind --log-file=tmp/valgrind.txt ./bin/dit
+
 run: dit
 	./bin/dit
