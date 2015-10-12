@@ -25,3 +25,6 @@ run: dit
 
 clean:
 	rm -rf -- obj/* bin/* tmp/*
+
+tcpdump:
+	sudo tcpdump -n udp -v dst port 3000
