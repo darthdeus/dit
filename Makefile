@@ -1,8 +1,16 @@
 ASAN=-fsanitize=address
 ASAN=
 
+ifeq ($(TARGET),server)
+	TARGET=BUILD_SERVER
+else
+	TARGET=BUILD_CLIENT
+endif
+
+
+
 INCLUDE=-isystem include
-CFLAGS=$(ASAN) -g3 -Wall -Wextra -std=gnu11 -O0 -pthread
+CFLAGS=$(ASAN) -g3 -Wall -Wextra -std=gnu11 -O0 -pthread -D$(TARGET)
 LIB=$(ASAN) -lncurses -lpthread
 LIB=
 
