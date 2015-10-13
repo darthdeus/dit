@@ -7,12 +7,9 @@ else
 	TARGET=BUILD_CLIENT
 endif
 
-
-
 INCLUDE=-isystem include
-CFLAGS=$(ASAN) -g3 -Wall -Wextra -std=gnu11 -O0 -pthread -D$(TARGET)
-LIB=$(ASAN) -lncurses -lpthread
-LIB=
+CFLAGS=$(ASAN) -g3 -Wall -Wextra -std=gnu11 -O0 -D$(TARGET)
+LIB=$(ASAN) -lncurses
 
 SRC=$(wildcard src/*.c)
 OBJ=$(patsubst src/%.c, obj/%.o, $(SRC))
