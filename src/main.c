@@ -2,17 +2,13 @@
 #include <signal.h>
 #include <ncurses.h>
 #include "udplib.h"
+#include "editor.h"
 
 #ifndef BUILD_SERVER
 
-__attribute__((noreturn)) void finish() {
-  endwin();
-  exit(0);
-}
-
 int main() {
-  /* udp_bcast(3000, "hello"); */
-  /* udp_bcast(3000, "worldddd"); */
+  // udp_bcast(3000, "hello");
+  // udp_bcast(3000, "worldddd");
 
   signal(SIGINT, finish);
 
@@ -25,10 +21,7 @@ int main() {
   scrollok(stdscr, TRUE);
   refresh();
 
-  while (1) {
-    int ch = getch();
-    if (ch == 'q') finish();
-  }
+  dummy_editor();
 
   finish();
 }
