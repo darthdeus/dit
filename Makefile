@@ -38,3 +38,6 @@ clean:
 
 tcpdump:
 	sudo tcpdump -n udp -v dst port 3000
+
+socat:
+	echo "foobar" | socat - udp-datagram:127.0.0.1:3000,broadcast
