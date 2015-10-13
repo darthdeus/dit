@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -19,7 +20,7 @@ int main() {
   addr.sin_family = AF_INET;
   addr.sin_port = htons(3000);
 
-  if (inet_aton("127.0.0.1", &addr.sin_addr) == 0) {
+  if (inet_aton("255.255.255.255", &addr.sin_addr) == 0) {
     failed("inet_aton()");
   }
 
@@ -35,4 +36,5 @@ int main() {
     failed("stat()");
   }
 
+  close(sock);
 }

@@ -1,8 +1,10 @@
 ASAN=-fsanitize=address
+ASAN=
 
 INCLUDE=-Iinclude
 CFLAGS=$(ASAN) -g3 -Wall -Wextra -std=gnu11 -O0 -pthread
 LIB=$(ASAN) -lncurses -lpthread
+LIB=
 
 SRC=$(wildcard src/*.c)
 OBJ=$(patsubst src/%.c, obj/%.o, $(SRC))
