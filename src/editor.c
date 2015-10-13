@@ -64,6 +64,7 @@ static void update(int ch) {
         x--;
       } else if (y) {
         y--;
+        // TODO - this should be the position of the last non-zero character
         x = N-1;
       } else {
         return; // backspacing at 0,0
