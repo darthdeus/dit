@@ -3,7 +3,7 @@
 #include "editor.h"
 #include "udplib.h"
 
-static void log(const char* str) {
+static void log_msg(const char* str) {
   udp_bcast(3000, str);
 
 }
@@ -25,13 +25,15 @@ static int y = 0;
 static void update(int ch) {
   assert(x < 80);
 
-  buffer[x][y] = ch;
+  buffer[y][x] = ch;
 
   if (x+1 == 80) {
     x = 0;
+    ++y;
+  } else {
+    ++x;
   }
 
-  ++y;
 }
 
 static void render() {
@@ -40,16 +42,17 @@ static void render() {
 
   sprintf(buf, "%d %d %c", x, y, buffer[0][0]);
 
-  log(buf);
+  log_msg(buf);
   wmove(stdscr, 0, 0);
-
 
   for (int i = 0; i < M; ++i) {
     for (int j = 0; j < N; ++j) {
       addch(buffer[i][j]);
     }
-    wmove(stdscr, i, 0);
+    addch('\n');
   }
+
+  wmove(stdscr, y, x);
 }
 
 void dummy_editor() {
