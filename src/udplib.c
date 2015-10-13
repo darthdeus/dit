@@ -10,8 +10,7 @@
 
 #include "udplib.h"
 
-__attribute__((noreturn))
-static void failed(const char* s) {
+__attribute__((noreturn)) static void failed(const char* s) {
   perror(s);
   exit(1);
 }
@@ -33,16 +32,13 @@ void udp_listen(int port) {
     failed("bind()");
   }
 
-#define BUFLEN 512
-  char buf[BUFLEN];
+#define N 512
+  char buf[N];
 
   socklen_t clen = sizeof(addr_client);
-  if (recvfrom(sock, buf, BUFLEN, 0, (struct sockaddr*)&addr_client, &clen) == -1) {
+  if (recvfrom(sock, buf, N, 0, (struct sockaddr*)&addr_client, &clen) == -1) {
     failed("recvfrom()");
   }
-
-  printf("Received packet from %s:%d\nData: %s\n\n",
-         inet_ntoa(addr_client.sin_addr), ntohs(addr_client.sin_port), buf);
 }
 
 void udp_bcast(int port, const char* str) {
@@ -61,12 +57,14 @@ void udp_bcast(int port, const char* str) {
   }
 
   int broadcastEnable = 1;
-  int ret = setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable));
+  int ret = setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcastEnable,
+                       sizeof(broadcastEnable));
   if (ret == -1) {
     failed("setsockopt()");
   }
 
-  int stat = sendto(sock, str, strlen(str), 0, (struct sockaddr*) &addr, sizeof(addr));
+  int stat =
+      sendto(sock, str, strlen(str), 0, (struct sockaddr*)&addr, sizeof(addr));
   if (!stat) {
     failed("stat()");
   }
