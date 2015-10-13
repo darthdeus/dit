@@ -10,16 +10,21 @@
 #include "editor.h"
 #include "udplib.h"
 
-#define M 25
-#define N 80
+/* #define M 25 */
+/* #define N 80 */
+#define M 5
+#define N 8
 
-static char buffer[25][81];
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
+
+static char buffer[M][N+1];
 // current cursor position
 static int x = 0;
 static int y = 0;
 
 static void fix_trailing_cursor() {
-  for (int j = 0; j < 81; ++j) {
+  for (int j = 0; j < N; ++j) {
     if (!buffer[y][j]) {
       x = j;
       break;
@@ -43,56 +48,64 @@ void finish() {
 }
 
 static void update(int ch) {
-  assert(x < 80);
+  assert(x < N);
 
   switch (ch) {
     case 13: // TODO
     case KEY_ENTER:
-      ++y;
+      y = MIN(y + 1, M);
       x = 0;
       return;
 
     case KEY_DC:
     case 127: // TODO - check this
     case KEY_BACKSPACE:
-      --x;
+      if (x) {
+        x--;
+      } else if (y) {
+        y--;
+        x = N-1;
+      } else {
+        return; // backspacing at 0,0
+      }
 
       // TODO - should be 0 if there are no characters afterward
-      buffer[y][x] = ' ';
+      buffer[y][x] = '\0';
       return;
 
     case KEY_UP:
-      --y;
+      y = MAX(y - 1, 0);
       fix_trailing_cursor();
       return;
 
     case KEY_DOWN:
-      ++y;
+      y = MIN(y + 1, M);
       fix_trailing_cursor();
       return;
 
     case KEY_LEFT:
-      --x;
+      x = MAX(x - 1, 0);
       fix_trailing_cursor();
       return;
 
     case KEY_RIGHT:
-      ++x;
+      x = MIN(x + 1, M);
       fix_trailing_cursor();
       return;
 
   }
 
-  fix_trailing_cursor();
-
   buffer[y][x] = ch;
 
-  if (x+1 == 80) {
+  if (x+1 == N) {
     x = 0;
     ++y;
   } else {
     ++x;
   }
+
+  fix_trailing_cursor();
+
 }
 
 static void render() {
@@ -103,7 +116,7 @@ static void render() {
       if (buffer[i][j])
         addch(buffer[i][j]);
       else
-        addch(' ');
+        addch('.');
     }
     addch('\n');
   }
