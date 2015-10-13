@@ -1,11 +1,33 @@
 #include <assert.h>
 #include <string.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include "editor.h"
 #include "udplib.h"
 
 static void log_msg(const char* str) {
-  udp_bcast(3000, str);
+  fprintf(stderr, "%s", str);
+  /* udp_bcast(3000, str); */
+  /* int fd = open("log.txt", O_WRONLY | O_CREAT | O_APPEND); */
+  /* if (fd == -1) { */
+  /*   failed("log_msg() -> open()"); */
+  /* } */
+  /*  */
+  /* if (dprintf(fd, "log: %s", str) != strlen(str)) { */
+  /*   failed("log_msg() -> dprintf()"); */
+  /* } */
+  /*  */
+  /* if (!close(fd)) { */
+  /*   failed("log_msg() -> close()"); */
+  /* } */
+}
 
+static void log_char(char c) {
+  char buf[2] = { c, '\0' };
+  udp_bcast(3000, buf);
 }
 
 // TODO - check if the noreturn attribute needs to be here as well
@@ -17,7 +39,7 @@ void finish() {
 #define M 25
 #define N 80
 
-static char buffer[25][80];
+static char buffer[25][81];
 // current cursor position
 static int x = 0;
 static int y = 0;
@@ -26,6 +48,20 @@ static void update(int ch) {
   assert(x < 80);
 
   switch (ch) {
+    case KEY_ENTER:
+      ++y;
+      x = 0;
+      return;
+
+    case KEY_DC:
+    case 127: // TODO - check this
+    case KEY_BACKSPACE:
+      --x;
+
+      // TODO - should be 0 if there are no characters afterward
+      buffer[y][x] = ' ';
+      return;
+
     case KEY_UP:
       --y;
       return;
@@ -66,7 +102,10 @@ static void render() {
 
   for (int i = 0; i < M; ++i) {
     for (int j = 0; j < N; ++j) {
-      addch(buffer[i][j]);
+      if (buffer[i][j])
+        addch(buffer[i][j]);
+      else
+        addch(' ');
     }
     addch('\n');
   }
@@ -75,7 +114,7 @@ static void render() {
 }
 
 void dummy_editor() {
-  memset(buffer, '.', M*N);
+  memset(buffer, '\0', M*N);
 
   render();
   while (1) {

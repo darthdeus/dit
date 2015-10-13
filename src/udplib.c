@@ -10,7 +10,7 @@
 
 #include "udplib.h"
 
-__attribute__((noreturn)) static void failed(const char* s) {
+__attribute__((noreturn)) void failed(const char* s) {
   perror(s);
   exit(1);
 }
