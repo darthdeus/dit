@@ -34,7 +34,7 @@ clean:
 	rm -rf -- obj/* bin/* tmp/*
 
 tcpdump:
-	sudo tcpdump -n udp -v dst port 3000
+	sudo tcpdump -n udp -v dst port 3000 -X
 
 socat:
 	echo foobar | socat - udp-datagram:255.255.255.255:3000,broadcast
