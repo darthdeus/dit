@@ -31,6 +31,9 @@ int main() {
     failed("socket()");
   }
 
+  int broadcastEnable = 1;
+  setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable));
+
   int stat = sendto(sock, str, strlen(str), 0, (struct sockaddr*) &addr, sizeof(addr));
   if (!stat) {
     failed("stat()");
