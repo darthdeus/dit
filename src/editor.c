@@ -25,6 +25,25 @@ static int y = 0;
 static void update(int ch) {
   assert(x < 80);
 
+  switch (ch) {
+    case KEY_UP:
+      --y;
+      return;
+
+    case KEY_DOWN:
+      ++y;
+      return;
+
+    case KEY_LEFT:
+      --x;
+      return;
+
+    case KEY_RIGHT:
+      ++x;
+      return;
+
+  }
+
   buffer[y][x] = ch;
 
   if (x+1 == 80) {
