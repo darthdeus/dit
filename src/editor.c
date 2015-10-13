@@ -56,12 +56,12 @@ static void update(int ch) {
 }
 
 static void render() {
-  char buf[100];
-  memset(buf, 0, strlen(buf));
+  // TODO - figure out a better way of logging
+  /* char buf[100]; */
+  /* memset(buf, 0, strlen(buf)); */
+  /* sprintf(buf, "%d %d %c", x, y, buffer[0][0]); */
+  /* log_msg(buf); */
 
-  sprintf(buf, "%d %d %c", x, y, buffer[0][0]);
-
-  log_msg(buf);
   wmove(stdscr, 0, 0);
 
   for (int i = 0; i < M; ++i) {
