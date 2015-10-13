@@ -4,6 +4,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <menu.h>
+#include <ncurses.h>
 
 #include "editor.h"
 #include "udplib.h"
