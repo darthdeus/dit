@@ -9,7 +9,7 @@
 #include "udplib.h"
 
 static void log_msg(const char* str) {
-  fprintf(stderr, "%s", str);
+  fprintf(stderr, "%s\n", str);
   /* udp_bcast(3000, str); */
   /* int fd = open("log.txt", O_WRONLY | O_CREAT | O_APPEND); */
   /* if (fd == -1) { */
@@ -26,8 +26,7 @@ static void log_msg(const char* str) {
 }
 
 static void log_char(char c) {
-  char buf[2] = { c, '\0' };
-  udp_bcast(3000, buf);
+  fprintf(stderr, "%c\n", c);
 }
 
 // TODO - check if the noreturn attribute needs to be here as well
@@ -93,10 +92,10 @@ static void update(int ch) {
 
 static void render() {
   // TODO - figure out a better way of logging
-  /* char buf[100]; */
-  /* memset(buf, 0, strlen(buf)); */
-  /* sprintf(buf, "%d %d %c", x, y, buffer[0][0]); */
-  /* log_msg(buf); */
+  char buf[100];
+  memset(buf, 0, strlen(buf));
+  sprintf(buf, "%d %d %c", x, y, buffer[0][0]);
+  log_msg(buf);
 
   wmove(stdscr, 0, 0);
 
