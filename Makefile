@@ -28,7 +28,7 @@ valgrind:
 	valgrind --log-file=tmp/valgrind.txt ./bin/dit
 
 run: dit
-	./bin/dit
+	./bin/dit 2>/dev/ttys007
 
 clean:
 	rm -rf -- obj/* bin/* tmp/*

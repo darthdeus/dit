@@ -8,21 +8,26 @@
 #include "editor.h"
 #include "udplib.h"
 
+#define M 25
+#define N 80
+
+static char buffer[25][81];
+// current cursor position
+static int x = 0;
+static int y = 0;
+
+static void fix_trailing_cursor() {
+  for (int j = 0; j < 81; ++j) {
+    if (!buffer[y][j]) {
+      x = j;
+      break;
+    }
+  }
+
+}
+
 static void log_msg(const char* str) {
   fprintf(stderr, "%s\n", str);
-  /* udp_bcast(3000, str); */
-  /* int fd = open("log.txt", O_WRONLY | O_CREAT | O_APPEND); */
-  /* if (fd == -1) { */
-  /*   failed("log_msg() -> open()"); */
-  /* } */
-  /*  */
-  /* if (dprintf(fd, "log: %s", str) != strlen(str)) { */
-  /*   failed("log_msg() -> dprintf()"); */
-  /* } */
-  /*  */
-  /* if (!close(fd)) { */
-  /*   failed("log_msg() -> close()"); */
-  /* } */
 }
 
 static void log_char(char c) {
@@ -35,18 +40,11 @@ void finish() {
   exit(0);
 }
 
-#define M 25
-#define N 80
-
-static char buffer[25][81];
-// current cursor position
-static int x = 0;
-static int y = 0;
-
 static void update(int ch) {
   assert(x < 80);
 
   switch (ch) {
+    case 13: // TODO
     case KEY_ENTER:
       ++y;
       x = 0;
@@ -63,21 +61,27 @@ static void update(int ch) {
 
     case KEY_UP:
       --y;
+      fix_trailing_cursor();
       return;
 
     case KEY_DOWN:
       ++y;
+      fix_trailing_cursor();
       return;
 
     case KEY_LEFT:
       --x;
+      fix_trailing_cursor();
       return;
 
     case KEY_RIGHT:
       ++x;
+      fix_trailing_cursor();
       return;
 
   }
+
+  fix_trailing_cursor();
 
   buffer[y][x] = ch;
 
@@ -87,16 +91,9 @@ static void update(int ch) {
   } else {
     ++x;
   }
-
 }
 
 static void render() {
-  // TODO - figure out a better way of logging
-  char buf[100];
-  memset(buf, 0, strlen(buf));
-  sprintf(buf, "%d %d %c", x, y, buffer[0][0]);
-  log_msg(buf);
-
   wmove(stdscr, 0, 0);
 
   for (int i = 0; i < M; ++i) {
