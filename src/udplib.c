@@ -17,6 +17,32 @@ static void failed(const char* s) {
 }
 
 void udp_listen(int port) {
+  struct sockaddr_in addr_server, addr_client;
+
+  int sock;
+  if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
+    failed("socket()");
+  }
+
+  memset((char*)&addr_server, 0, sizeof(addr_server));
+  addr_server.sin_family = AF_INET;
+  addr_server.sin_port = htons(port);
+  addr_server.sin_addr.s_addr = htonl(INADDR_ANY);
+
+  if (bind(sock, (struct sockaddr*)&addr_server, sizeof(addr_server)) == -1) {
+    failed("bind()");
+  }
+
+#define BUFLEN 512
+  char buf[BUFLEN];
+
+  socklen_t clen = sizeof(addr_client);
+  if (recvfrom(sock, buf, BUFLEN, 0, (struct sockaddr*)&addr_client, &clen) == -1) {
+    failed("recvfrom()");
+  }
+
+  printf("Received packet from %s:%d\nData: %s\n\n",
+         inet_ntoa(addr_client.sin_addr), ntohs(addr_client.sin_port), buf);
 }
 
 void udp_bcast(int port, const char* str) {
