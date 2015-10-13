@@ -1,7 +1,7 @@
 ASAN=-fsanitize=address
 ASAN=
 
-INCLUDE=-Iinclude
+INCLUDE=-isystem include
 CFLAGS=$(ASAN) -g3 -Wall -Wextra -std=gnu11 -O0 -pthread
 LIB=$(ASAN) -lncurses -lpthread
 LIB=
@@ -14,7 +14,7 @@ OBJ=$(patsubst src/%.c, obj/%.o, $(SRC))
 all: run
 
 obj/%.o: src/%.c
-	$(CC) $(CFLAGS) $(CPFLAGS) -c $< -o $@
+	$(CC) $(INCLUDE) $(CFLAGS) $(CPFLAGS) -c $< -o $@
 
 dit: $(OBJ)
 	$(CC) $(LIB) $(OBJ) -o bin/dit
